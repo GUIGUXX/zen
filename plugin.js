@@ -1,25 +1,54 @@
 
 
+class Result {
+  constructor(title, result, score) {
+    // 运行结果, 传递到 args , 可以复制
+    this.result = result ? result : "";
+    this.arg = this.result;
+    // 结果评分, 影响排序
+    this.score = score ? score : 0;
+    this.title = title ? title : this.result;
+  }
+  set_result(result) {
+    this.result = result;
+    this.arg = result;
+  }
+  score_incr(increase) {
+    this.score += increase;
+  }
+  switch_show() {
+    // 当正确的结果生成是, 交换变量, 大头显示正确的结果
+    [this.title,this.result] = [this.result,this.title];
+  }
+}
+
+
 // 子过程
 export class SubProcess {
 
-  constructor(matchRegex, runnableRegex, runnableFunction) {
-    // 匹配的正则表达式
-    this.matchRegex = new RegExp(matchRegex);
-    // 可运行的正则表达式
-    this.runnableRegex = new RegExp(runnableRegex);
-    // 正则表达式对应的处理过程
-    this.runnableFunction = runnableFunction;
+  constructor(paramInRaw) {
+    // 匹配的正则表达式, 可运行的表达式, 运行函数, 子过程名称, 子过程用法
+    ['matchReg', 'fullReg', 'runnable', 'name', 'usage'].forEach(
+      el => {
+        this[el] = paramInRaw[el]
+      }
+    )
   }
 
   // 匹配并且运行子处理过程
-  match_run(param) {
+  run_at(param) {
     // 正则匹配
-    if (this.matchRegex.test(param)) {
-      var tryRunResult = this.runnableFunction(param);
-      return { match: true, result: tryRunResult }
+    var runResult = this.usage
+    var result = new Result(this.name, runResult, 1);
+    result.set_result(runResult);
+    if (this.fullReg.test(param)) {
+      result.set_result(this.runnable(param));
+      result.score_incr(3)
+      result.switch_show()
+    } else if (this.matchReg.test(param)) {
+      result.score_incr(2)
     }
-    return { match: false, result: param }
+    return result;
   }
 }
 
@@ -34,20 +63,16 @@ export default class Plugin {
   }
 
   // 匹配当前输入是否匹配到处理过程
-  // 场景 1, 前缀 name 匹配, 后缀参数匹配, 匹配的参数直接执行. 
-  // 场景 2, 前缀 name 匹配, 后缀参数不匹配, 排序靠后, 提示正确的入参正则. 
-  // 场景 3, 前缀 name 不匹配, 跳过. 
-  _p_matches(inputString) {
-    var a = this.subProcess.filter(process => {
-      if (inputString.match(this.nameMatchRegex)) {
+  run_at(inputString) {
+    if (inputString.match(this.nameMatchRegex)) {
+      return this.subProcess.map(process => {
+        // 场景 1, 前缀 name 匹配, 后缀参数匹配, 匹配的参数直接执行. 
         var pluginParam = inputString.replace(this.replaceRegex, '')
-        var match_result = process.match_run(pluginParam)
-        // 匹配并且运行
-        console.log(match_result)
-        return match_result.match
+        return process.run_at(pluginParam)
       }
-      return {match:false};
-    }).length > 0;
-    return a;
+      )
+    }
+    // 场景 3, 前缀 name 不匹配, 跳过. 
+    return [new Result()];
   }
 }

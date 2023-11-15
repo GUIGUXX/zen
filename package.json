@@ -23,6 +23,9 @@
   "homepage": "https://github.com/GUIGUXX/zen#readme",
   "dependencies": {
     "alfy": "^1.1.0",
-    "moment": "2.29.4"
+    "clipboardy": "^3.0.0",
+    "moment": "2.29.4",
+    "tmp": "^0.2.1",
+    "uuid": "^9.0.0"
   }
 }
