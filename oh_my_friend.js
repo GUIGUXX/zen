@@ -68,8 +68,8 @@ export async function get_oh_access_token(flush) {
 // 测试一个翻译
 var OhTrans = new SubProcess({
   name: "Oh!英语翻译",
-  matchReg: /#.+/g,
-  fullReg: /#.+#/g,
+  matchReg: /^#.+/g,
+  fullReg: /^#.+#$/g,
   runnable: async function (str) {
     var content = str.replace(/#/, '')
     var result = await start_one_chat(content).then((a) => {
