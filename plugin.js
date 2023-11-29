@@ -17,11 +17,10 @@ class Result {
     this.score += increase;
   }
   switch_show() {
-    // 当正确的结果生成是, 交换变量, 大头显示正确的结果
+    // 当正确的结果生成成功, 交换变量, 大头显示正确的结果
     [this.title,this.result] = [this.result,this.title];
   }
 }
-
 
 // 子过程
 export class SubProcess {
@@ -51,7 +50,7 @@ export class SubProcess {
     return result;
   }
 }
-
+// 1
 // 插件对象
 export default class Plugin {
   // 插件对象, 包含插件名称和正则表达式

@@ -2,9 +2,9 @@ import alfy from 'alfy';
 import timer from './timer.js'
 import ran from "./ran.js"
 import z_string from './z_string.js';
-
+import oh_my_friend from './oh_my_friend.js'
 const plugins = [
-  timer, ran, z_string
+  timer, ran, z_string, oh_my_friend
 ]
 
 
