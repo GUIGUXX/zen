@@ -26,7 +26,7 @@ function do_request(url, body) {
 
 
 export async function start_one_chat(trans_words, yield_call) {
-  // TODO trans_words 的长度不能超过 200
+  // trans_words 的长度不能超过 200
   if (trans_words.length > 200) {
     return '翻译内容过长，请重新输入'
   }
@@ -68,8 +68,8 @@ export async function get_oh_access_token(flush) {
 // 测试一个翻译
 var OhTrans = new SubProcess({
   name: "Oh!英语翻译",
-  matchReg: /^#.+/g,
-  fullReg: /^#.+#$/g,
+  matchReg: /#.+/g,
+  fullReg: /#.+#/g,
   runnable: async function (str) {
     var content = str.replace(/#/, '')
     var result = await start_one_chat(content).then((a) => {
