@@ -35,7 +35,7 @@ var showClipboardThroughFile = new SubProcess({
     let filePath = "@ " + tmpFilePath;
     return Promise.resolve([[filePath, '【Original】' + contents, filePath]])
   },
-  usage: "输入 `s 2f` 将剪切板中的内容复制到临时文件"
+  usage: "输入 `2f` 将剪切板中的内容复制到临时文件"
 })
 
 var showMd5 = new SubProcess({
@@ -49,8 +49,8 @@ var showMd5 = new SubProcess({
     let md5Result = crypto.createHash('md5').update(contents).digest('hex')
     return Promise.resolve([[md5Result, '【Original】' + contents, md5Result]])
   },
-  usage: "输入 `s md5` 为剪切板中的内容创建 md5 字符串"
+  usage: "输入 `md` 为剪切板中的内容创建 md5 字符串"
 })
 
-export default new Plugin('s', [showClipboardThroughFile, showMd5])
+export default new Plugin('str', [showClipboardThroughFile, showMd5],'字符串处理插件')
 

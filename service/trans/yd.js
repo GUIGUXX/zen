@@ -12,9 +12,9 @@ const URL = 'https://openapi.youdao.com/api'
 var YDTrans = new SubProcess({
   name: "有道",
   matchReg: /^.+/g,
-  fullReg: /^.+\s$/g,
+  fullReg: /^.+$/g,
   runnable: running_function,
-  usage: "输入 `yd 中文/English + 空格结尾.` 触发翻译"
+  usage: "输入 `yd 中文/English` 触发翻译"
 })
 
 function is_pure_english(str) {
@@ -45,7 +45,7 @@ export function running_function(str) {
         let webKey = "【例】" + webItem.key;
         return [webValue, webKey, webValue]
       })
-      return [...pureTrans, ...(pureDicTrans || []), ...(webResults || [])].filter(item => item)
+      return [...(pureTrans || []), ...(pureDicTrans || []), ...(webResults || [])].filter(item => item)
     });
 }
 function truncate(q) {
@@ -66,4 +66,4 @@ function do_request(url, body) {
   })
 }
 
-export default new Plugin('yd', [YDTrans])
+export default new Plugin('yd', [YDTrans], "使用 YD 翻译，自动切换中英文")

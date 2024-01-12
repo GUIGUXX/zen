@@ -2,12 +2,14 @@ import alfy from 'alfy';
 import timer from './service/timer/timer.js'
 import ran from "./service/ran/ran.js"
 import z_string from './service/strings/z_string.js';
-import tran from './service/trans/yd.js'
-const plugins = [
+import tran from './service/trans/yd.js';
+import help from './service/help/help.js'
+export const plugins = [
   timer,
   ran,
   z_string,
-  tran
+  tran,
+  help
 ]
 
 
@@ -18,8 +20,14 @@ var resultPromises = plugins.flatMap(plugin => plugin.match_process(runInput))
 
 
 Promise.all(resultPromises).then(oneProcessPromise => {
-  let items = oneProcessPromise.flatMap(re => re)
-    .sort((a, b) => b.score - a.score)
+  let items = format_results(oneProcessPromise.flatMap(re => re))
+  if (items) {
+    alfy.output(items);
+  }
+})
+
+function format_results(results) {
+  return results.sort((a, b) => b.score - a.score)
     .filter(item => item?.title ? item.score > 0 : false)
     .map(
       (item) => {
@@ -30,9 +38,4 @@ Promise.all(resultPromises).then(oneProcessPromise => {
         }
       }
     )
-  if (items) {
-    alfy.output(items);
-  }
-})
-
-
+}
