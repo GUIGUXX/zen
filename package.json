@@ -23,6 +23,7 @@
   "homepage": "https://github.com/GUIGUXX/zen#readme",
   "dependencies": {
     "alfy": "^1.1.0",
+    "axios": "^1.4.0",
     "clipboardy": "^3.0.0",
     "moment": "2.29.4",
     "request": "^2.88.2",

@@ -1,5 +1,5 @@
 
-import Plugin, { SubProcess } from "./plugin.js";
+import Plugin, { SubProcess } from "../../plugin.js";
 import clipboard from 'clipboardy';
 import fs from 'fs';
 import path from "path";
@@ -29,26 +29,27 @@ var showClipboardThroughFile = new SubProcess({
     var expireTimestamp = new moment().add(1, "days").unix()
     const tmpFilePath = path.join(__dirname, "/temps/" + expireTimestamp + '.txt');
     // 写入文件内容  
-
     fs.writeFile(tmpFilePath, contents, (err) => {
-      return err;
+      return [[err, null, err]]
     });
-    return "@ " + tmpFilePath;
+    let filePath = "@ " + tmpFilePath;
+    return Promise.resolve([[filePath, '【Original】' + contents, filePath]])
   },
-  usage: "输入 `show 2f` 将剪切板中的内容复制到临时文件"
+  usage: "输入 `s 2f` 将剪切板中的内容复制到临时文件"
 })
 
 var showMd5 = new SubProcess({
   name: "剪切板 => md5",
-  matchReg: /^(m|md|md5)$/g,
-  fullReg: /^md5$/g,
+  matchReg: /^(m|md)$/g,
+  fullReg: /^md$/g,
   runnable: (args) => {
     // 1. 从剪切板中获取字符串
     var contents = clipboard.readSync();
     // 2. 生成 md5 字符串 1
-    return crypto.createHash('md5').update(contents).digest('hex');
+    let md5Result = crypto.createHash('md5').update(contents).digest('hex')
+    return Promise.resolve([[md5Result, '【Original】' + contents, md5Result]])
   },
-  usage: "输入 `show md5` 为剪切板中的内容创建 md5 字符串"
+  usage: "输入 `s md5` 为剪切板中的内容创建 md5 字符串"
 })
 
 export default new Plugin('s', [showClipboardThroughFile, showMd5])

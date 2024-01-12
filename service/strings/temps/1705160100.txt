@@ -1,0 +1,3 @@
+let filePath = "@ " + tmpFilePath;
+    return Promise.resolve([[filePath, '【Original】' + contents, filePath]])
+  },
